@@ -1,0 +1,10 @@
+.dropbox
+_config/sc_users/*
+_config/envs/army.yml*
+_config/envs/sharecare.yml*
+_config/urls/sharecare/*
+_config/urls/hca/*
+config/*
+carldmitch/*
+sharecare/*
+comparisons/*
