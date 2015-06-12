@@ -57,7 +57,7 @@ module Setup
 
   def collecting_tasks
     test_config
-    load_test2 # this
+    # load_test2 # this
     @my_driver == "mw" ? (load_mobile_browser) : (load_desktop) # global
   end
 
@@ -145,14 +145,14 @@ end
     end
   end
 
-  def load_test2
-    testing = YAML.load(File.read("./_config/config.yml"))
-    @ids = testing['ids']
-    @class = testing['class']
-    @analytics = testing['analytics']
-    @dom = testing['dom']
-    @seo = testing['seo']
-  end
+  # def load_test2
+  #   testing = YAML.load(File.read("./_config/config.yml"))
+  #   @ids = testing['ids']
+  #   @class = testing['class']
+  #   @analytics = testing['analytics']
+  #   @dom = testing['dom']
+  #   @seo = testing['seo']
+  # end
 
   def url_2_path
     @url_count -= 1

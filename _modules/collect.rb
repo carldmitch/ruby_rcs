@@ -18,7 +18,12 @@ module Collect
   end
   
   def test_config
-    my_config = YAML.load(File.read("./_config/config.yml"))
+    if @browser_type == "phantomjs"
+      my_config = YAML.load(File.read("./_config/config.yml"))
+    else
+      my_config = YAML.load(File.read("./_config/chrome_config.yml"))
+    end
+    #
     @dom ||= my_config['dom']
     @ids ||= my_config['ids']
     @class ||= my_config['class']
@@ -94,7 +99,7 @@ module Collect
       open(filename, 'w') { |f| f.puts "#{@browser.url}" }
       file_ids = Nokogiri::HTML(open(file))
       ids = file_ids.css("[id]")
-        id_ray = ids.each do |id|
+        ids.each do |id|
           unless id["id"].include? "frame"
             open(filename, 'a') { |f| f.puts "#{id["id"]}" }
           end
@@ -112,12 +117,10 @@ module Collect
       report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}/"
     end
     FileUtils::mkdir_p "#{report_path}#{script_type}"
-#    class_file = "#{report_path}#{script_type}_#{@url_count}_.count"
     filename = "#{report_path}#{script_type}/#{@uri}_.log"
     
     if !(File.exist?(filename))
       puts '  Collecting classes'
-#      open(class_file, 'w') { |f| f.puts @url_count }
       open(filename, 'w') { |f| f.puts "#{@browser.url}" }
       file_classes = Nokogiri::HTML(open(file))
       classes = file_classes.css("[class]")
@@ -126,7 +129,7 @@ module Collect
         c["class"]
       end
       class_ray.uniq!    
-      uniq_class_ray = class_ray.each do |c|
+      class_ray.each do |c|
         unless c.blank?
         open(filename, 'a') { |f| f.puts "#{c}" }
         end
@@ -164,8 +167,10 @@ module Collect
           end
         end
       end
-      puts '  Already collected the analytic call'
+     else
+      puts '  Already collected the analytics call'
     end
+  end
 
 #    script_type = "analytics"
 #    if @my_driver == "mw"
@@ -196,7 +201,7 @@ module Collect
 #    else
 #      puts '  Already collected these analytics'
 #    end
-  end
+  # end
 
   def dtm_collect
     script_type = "dtm"
@@ -207,12 +212,10 @@ module Collect
     end
     FileUtils::mkdir_p "#{report_path}#{script_type}"
     filename = "#{report_path}#{script_type}/#{@uri}_.log"
-#    dtm_filename = "#{report_path}#{script_type}/#{@uri}_dtm.log"
 
     if !(File.exist?(filename))
       puts '  Collecting dtm'
       open(filename, 'w') { |f| f.puts "#{@browser.url}" }
-#      open(dtm_filename, 'w') { |f| f.puts "#{@browser.url}" }
       timing = @browser.execute_script("return window.performance.getEntries()")
       timing.each do |t_hash|
         t_hash.each do |t|
@@ -223,7 +226,6 @@ module Collect
             sub_t_call = URI.unescape(sub_t_call)
             if t_call.include? "sharecaredtm"
               open(filename, 'a') { |f| f.puts sub_t_call }
-#              open(dtm_filename, 'a') { |f| f.puts sub_t_call }
             else
             end
           end
@@ -233,20 +235,20 @@ module Collect
     end
   end
 
-  def screenshot_collect
-    filename = "#{@report_path}screenshots/#{@uri}_ss.png"
-    if !(File.exist?(filename))
-      puts '  Collecting SCREENSHOT'
-      @browser.execute_script("$( '#global-debug-info-toggle' ).remove();")
-      @browser.execute_script("$( '#global-debug-info-bar' ).remove();")
-      sleep 1
-      #take screenshot
-      screenshot = filename
-      @browser.screenshot.save screenshot
-    else
-      puts '  Already taken Screenshot'
-    end
-  end
+  # def screenshot_collect
+  #   filename = "#{@report_path}screenshots/#{@uri}_ss.png"
+  #   if !(File.exist?(filename))
+  #     puts '  Collecting SCREENSHOT'
+  #     @browser.execute_script("$( '#global-debug-info-toggle' ).remove();")
+  #     @browser.execute_script("$( '#global-debug-info-bar' ).remove();")
+  #     sleep 1
+  #     #take screenshot
+  #     screenshot = filename
+  #     @browser.screenshot.save screenshot
+  #   else
+  #     puts '  Already taken Screenshot'
+  #   end
+  # end
  #
 end
   

@@ -147,8 +147,8 @@ module Global
 # <------------------------------------------------------------> #
 
   def load_chrome_desktop
-      @browser =  Watir::Browser.new :chrome
-   if ARGV.include? "hide"
+    @browser =  Watir::Browser.new :chrome
+    if ARGV.include? "hide"
       @browser.window.move_to(50,1005)
     else
     end

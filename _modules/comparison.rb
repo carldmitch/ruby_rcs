@@ -46,7 +46,11 @@ module Comparison
     else
       @my_date = Time.now.strftime("%Y_%m_%d_%p")
     end
-    my_report_name = "../ruby_reports/comparisons/#{@my_domain}/#{@my_date}_(#{@num})/#{@env}/#{@scene}_#{@my_driver}/#{@test_type}/"
+    if @my_driver == "mw"
+      my_report_name = "../ruby_reports/comparisons/#{@my_domain}/#{@my_date}_(#{@num})/#{@env}/#{@scene}_#{@my_driver}/#{@test_type}/"
+    else
+      my_report_name = "../ruby_reports/comparisons/#{@my_domain}/#{@my_date}_(#{@num})/#{@env}/#{@scene}/#{@test_type}/"
+    end
     FileUtils::mkdir_p my_report_name
     if FileUtils.compare_file(file1, file2)
       puts "no diff"

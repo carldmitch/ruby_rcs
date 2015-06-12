@@ -33,14 +33,14 @@ task :all => [] do
     Rake::Task[:profileuri].execute 3
 end
 
-# rake compare_all num=2 env=stage test=ids
+# rake compare env=stage test=ids driver=mw num=2
 # rake compare_all num=2 env=stage test=ids
 # rake compare_all num=2 env=stage test=ids
 # rake compare_all num=2 env=stage user=ray
 # rake compare_all num=2 env=stage user=ray scene=profileuri
 desc "Default rake task"
 task :compare do
-  ruby "compare_elements.rb all #{ENV['num']} #{ENV['env']} #{ENV['test']} #{ENV['user']} #{ENV['scene']}" rescue puts($!, $@) 
+  ruby "compare_elements.rb all #{ENV['num']} #{ENV['env']} #{ENV['test']} #{ENV['user']} #{ENV['scene']} #{ENV['driver']}" rescue puts($!, $@) 
 end
 #
 #rake compare_all num=2 env=stage
