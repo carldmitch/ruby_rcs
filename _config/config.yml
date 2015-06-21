@@ -6,9 +6,9 @@ domain: 'sharecare' # domain under test
 dom: true
 ids: true
 class: true
-#analytics: false
-#dtm: false
-seo: false
+analytics: true # doesn't work with phantomjs
+dtm: true # doesn't work with phantomjs
+seo: untrue
 
 #domain: 'carldmitch' # domain under test
 #dom: true

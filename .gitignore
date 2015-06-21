@@ -1,3 +1,4 @@
+Icon
 .dropbox
 _config/sc_users/*
 _config/envs/army.yml*
@@ -8,4 +9,8 @@ config/*
 carldmitch/*
 sharecare/*
 comparisons/*
+<<<<<<< HEAD
 testing*
+=======
+testing*
+>>>>>>> dtm_updates

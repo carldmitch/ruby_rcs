@@ -41,9 +41,9 @@ run do
     dom_collect if @dom == true
     id_collect_from_html(@dom_filename) if @ids == true
     class_collect_from_html(@dom_filename) if @class == true
-    seo_collect(@dom_filename) if @seo == true
     analytics_collect if @analytics == true
     dtm_collect if @dtm == true
+    seo_collect(@dom_filename) if @seo == true
   end
  #
 end # end run
