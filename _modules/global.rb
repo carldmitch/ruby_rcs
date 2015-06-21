@@ -114,26 +114,14 @@ module Global
 # <------------------------------------------------------------> #
 
   def load_desktop
-    if ARGV.any? { |x| ["chrome", "ff", "har"].include?(x) } 
+    if ARGV.any? { |x| ["chrome", "ff", "phantomjs"].include?(x) } 
       load_chrome_desktop if ARGV.include?("chrome")
       load_firefox_desktop if ARGV.include?("ff")
-      load_har_desktop if ARGV.include?("har")
+      load_phantomjs_desktop if ARGV.include?("phantomjs")
     else
-      # We want to load headless browser by default
-      load_phantomjs_desktop
+      # load_phantomjs_desktop
+      load_chrome_desktop
     end
-  end
-
-# <------------------------------------------------------------> #
-
-  def load_har_desktop
-    server = BrowserMob::Proxy::Server.new("./browsermob-proxy-2.1.0-beta-1/bin/browsermob-proxy") #=> #<BrowserMob::Proxy::Server:0x000001022c6ea8 ...>
-    server.start
-    @proxy = server.create_proxy
-    prefs = ["--proxy-server=localhost:#{@proxy.port}"]
-    proxy_listener = BrowserMob::Proxy::WebDriverListener.new(@proxy)
-    driver = Selenium::WebDriver.for :chrome, :switches => prefs, :listener => proxy_listener
-    @browser = Watir::Browser.new driver
   end
 
 # <------------------------------------------------------------> #

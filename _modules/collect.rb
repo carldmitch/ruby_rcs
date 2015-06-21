@@ -1,5 +1,13 @@
 #Global module for collecting stuff for comparison
 module Collect
+  def collection_path
+    if @my_driver == "mw"
+      @report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}_#{@my_driver}/"
+    else
+      @report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}/"
+    end
+  end
+  
   def folder_setup
     if ARGV.include? "test"
       @my_date = Time.now.strftime("%Y_%m_%d_%p_test")
@@ -7,23 +15,15 @@ module Collect
       @my_date = Time.now.strftime("%Y_%m_%d_%p")
     end
     #
-    if @my_driver == "mw"
-      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}_#{@my_driver}/"
-    else
-      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}/"
-    end
-    FileUtils::mkdir_p "#{report_path}"
-    count_file = "#{report_path}_#{@url_count}_.count"
+    collection_path
+    FileUtils::mkdir_p "#{@report_path}"
+    count_file = "#{@report_path}_#{@key_url}_#{@url_count}_.count"
     open(count_file, 'w') { |f| f.puts @url_count }
   end
   
   def test_config
-    if @browser_type == "phantomjs"
-      my_config = YAML.load(File.read("./_config/config.yml"))
-    else
-      my_config = YAML.load(File.read("./_config/chrome_config.yml"))
-    end
-    #
+    my_config = YAML.load(File.read("./_config/config.yml"))
+    
     @dom ||= my_config['dom']
     @ids ||= my_config['ids']
     @class ||= my_config['class']
@@ -34,13 +34,9 @@ module Collect
   
   def dom_collect
     script_type = "dom"
-      if @my_driver == "mw"
-        report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}_#{@my_driver}/"
-      else
-        report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}/"
-      end
-    FileUtils::mkdir_p "#{report_path}#{script_type}"
-    filename = "#{report_path}#{script_type}/#{@uri}_.html"
+    collection_path
+    FileUtils::mkdir_p "#{@report_path}#{script_type}"
+    filename = "#{@report_path}#{script_type}/#{@uri}_.html"
     
     if !(File.exist?(filename))
       puts '  Collecting DOM'
@@ -55,22 +51,16 @@ module Collect
   def css_text(node)
     node_css = @file_seo.css(node)
         return "#{node}: [ #{node_css.count} ] #{node_css.text.gsub(/\A\s{2,}/, ' ')}" unless node_css.empty?    
-#    return "#{node}: [ #{node_css.count} ] #{node_css.text.strip}" unless node_css.empty?    
   end
   
   def seo_collect(file) # WIP
     script_type = "seo"
-    if @my_driver == "mw"
-      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}_#{@my_driver}/"
-    else
-      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}/"
-    end
-    FileUtils::mkdir_p "#{report_path}#{script_type}"
-    filename = "#{report_path}#{script_type}/#{@uri}_.log"
+    collection_path
+    FileUtils::mkdir_p "#{@report_path}#{script_type}"
+    filename = "#{@report_path}#{script_type}/#{@uri}_.log"
     
     if !(File.exist?(filename))
       puts '  Collecting seo elements'
-#      open(filename, 'w') { |f| f.puts "#{@browser.url}" }
       @file_seo = Nokogiri::HTML(open(file))
       open(filename, 'w') { |f| f.puts "#{@browser.url}" }
       open(filename, 'a') { |f| f.puts "#{css_text('title')}" } unless css_text('title').blank?
@@ -80,19 +70,16 @@ module Collect
       open(filename, 'a') { |f| f.puts "#{css_text('h4')}" } unless css_text('h4').blank?
       open(filename, 'a') { |f| f.puts "canonical: #{@file_seo.css('link[rel=canonical]').count}" }
       open(filename, 'a') { |f| f.puts "canonical: #{@file_seo.css('link[rel=canonical]').attr('href')}" }
+    else
+    puts '  Already collected seo'
     end
   end
 
   def id_collect_from_html(file)
     script_type = "ids"
-    if @my_driver == "mw"
-      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}_#{@my_driver}/"
-    else
-      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}/"
-    end
-    FileUtils::mkdir_p "#{report_path}#{script_type}"
-#    id_file = "#{report_path}#{script_type}_#{@url_count}_.count"
-    filename = "#{report_path}#{script_type}/#{@uri}_.log"
+    collection_path
+    FileUtils::mkdir_p "#{@report_path}#{script_type}"
+    filename = "#{@report_path}#{script_type}/#{@uri}_.log"
 
     if !(File.exist?(filename))
       puts '  Collecting ids'
@@ -111,13 +98,9 @@ module Collect
 
   def class_collect_from_html(file)
     script_type = "class"
-    if @my_driver == "mw"
-      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}_#{@my_driver}/"
-    else
-      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}/"
-    end
-    FileUtils::mkdir_p "#{report_path}#{script_type}"
-    filename = "#{report_path}#{script_type}/#{@uri}_.log"
+    collection_path
+    FileUtils::mkdir_p "#{@report_path}#{script_type}"
+    filename = "#{@report_path}#{script_type}/#{@uri}_.log"
     
     if !(File.exist?(filename))
       puts '  Collecting classes'
@@ -142,13 +125,9 @@ module Collect
 
   def analytics_collect
     script_type = "analytics"
-    if @my_driver == "mw"
-      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}_#{@my_driver}/"
-    else
-      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}/"
-    end
-    FileUtils::mkdir_p "#{report_path}#{script_type}"
-    filename = "#{report_path}#{script_type}/#{@uri}_.log"
+    collection_path
+    FileUtils::mkdir_p "#{@report_path}#{script_type}"
+    filename = "#{@report_path}#{script_type}/#{@uri}_.log"
 
     if !(File.exist?(filename))
       puts '  Collecting analytics'
@@ -162,7 +141,41 @@ module Collect
             sub_t_call = sub_t_call.gsub('&',"\n")
             sub_t_call = URI.unescape(sub_t_call)
             unless t_call.include? "sharecaredtm"
-              open(filename, 'a') { |f| f.puts sub_t_call }
+              sub_t_call.each_line do |line|
+                # I want to exclue the values that return days and times so the compare script won't 
+                case
+                when line.start_with?('t=')
+                  # do nothing
+                when line.start_with?('c21')
+                  if line =~ /c21=\d+:\d+(AM|PM)/
+                    open(filename, 'a') { |f| f.puts 'c21=validated within ruby script' }
+                  else
+                    open(filename, 'a') { |f| f.puts "c21=ERROR VALIDATE MANUALLY #{Time.now}" }
+                  end
+                when line.start_with?('v21')
+                  if line =~ /v21=\d+:\d+(AM|PM)/
+                    open(filename, 'a') { |f| f.puts 'v21=validated within ruby script' }
+                  else
+                    open(filename, 'a') { |f| f.puts "v21=ERROR VALIDATE MANUALLY #{Time.now}" }
+                  end
+                when line.start_with?('c22')
+                  if line =~ /c22=\w+day$/
+                    open(filename, 'a') { |f| f.puts 'c22=validated within ruby script' }
+                  else
+                    open(filename, 'a') { |f| f.puts "c22=ERROR VALIDATE MANUALLY #{Time.now}" }
+                  end
+                when line.start_with?('v22')
+                  if line =~ /v22=\w+day$/
+                    open(filename, 'a') { |f| f.puts 'v22=validated within ruby script' }
+                  else
+                    open(filename, 'a') { |f| f.puts "v22=ERROR VALIDATE MANUALLY #{Time.now}" }
+                  end
+                when line.start_with?('https://smetrics')
+                    open(filename, 'a') { |f| f.puts line[0...-15] }
+                else
+                open(filename, 'a') { |f| f.puts line }
+                end
+              end
             end
           end
         end
@@ -172,49 +185,13 @@ module Collect
     end
   end
 
-#    script_type = "analytics"
-#    if @my_driver == "mw"
-#      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}_#{@my_driver}/"
-#    else
-#      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}/"
-#    end
-#    FileUtils::mkdir_p "#{report_path}#{script_type}"
-##    analytics_file = "#{report_path}#{script_type}_#{@url_count}_.count"
-#    filename = "#{report_path}#{script_type}/#{@uri}_.log"
-#    
-#    if !(File.exist?(filename))
-#      puts '  Collecting analytics'
-#      open(filename, 'w') { |f| f.puts "#{@browser.url}" }
-#      tags_ray = YAML.load_file(File.join(__dir__, '../_config/analytics/analytics_all_tags.yml'))
-#
-#      tags_ray.each do |tag| # BEGIN tags_ray
-#        begin
-#          value = @browser.execute_script("return s.#{tag}").to_s
-#          unless value.nil? || value == '' || # BEGIN unless value.nil
-#            open(filename, 'a') { |f| f.puts "#{tag}:#{value}" }
-#          end
-#        rescue
-#          puts($!, $@)
-#          next
-#        end
-#      end
-#    else
-#      puts '  Already collected these analytics'
-#    end
-  # end
-
   def dtm_collect
     script_type = "dtm"
-    if @my_driver == "mw"
-      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}_#{@my_driver}/"
-    else
-      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}/"
-    end
-    FileUtils::mkdir_p "#{report_path}#{script_type}"
-    filename = "#{report_path}#{script_type}/#{@uri}_.log"
-
-    if !(File.exist?(filename))
+    collection_path
+    FileUtils::mkdir_p "#{@report_path}#{script_type}"
+    filename = "#{@report_path}#{script_type}/#{@uri}_.log"
       puts '  Collecting dtm'
+    if !(File.exist?(filename))
       open(filename, 'w') { |f| f.puts "#{@browser.url}" }
       timing = @browser.execute_script("return window.performance.getEntries()")
       timing.each do |t_hash|
@@ -225,30 +202,49 @@ module Collect
             sub_t_call = sub_t_call.gsub('&',"\n")
             sub_t_call = URI.unescape(sub_t_call)
             if t_call.include? "sharecaredtm"
-              open(filename, 'a') { |f| f.puts sub_t_call }
-            else
+              sub_t_call.each_line do |line|
+                # I want to exclue the values that return days and times so the compare script won't 
+                case
+                when line.start_with?('t=')
+                  # do nothing
+                when line.start_with?('c21')
+                  if line =~ /c21=\d+:\d+(AM|PM)/
+                    open(filename, 'a') { |f| f.puts 'c21=validated within ruby script' }
+                  else
+                    open(filename, 'a') { |f| f.puts "c21=ERROR VALIDATE MANUALLY #{Time.now}" }
+                  end
+                when line.start_with?('v21')
+                  if line =~ /v21=\d+:\d+(AM|PM)/
+                    open(filename, 'a') { |f| f.puts 'v21=validated within ruby script' }
+                  else
+                    open(filename, 'a') { |f| f.puts "v21=ERROR VALIDATE MANUALLY #{Time.now}" }
+                  end
+                when line.start_with?('c22')
+                  if line =~ /c22=\w+day$/
+                    open(filename, 'a') { |f| f.puts 'c22=validated within ruby script' }
+                  else
+                    open(filename, 'a') { |f| f.puts "c22=ERROR VALIDATE MANUALLY #{Time.now}" }
+                  end
+                when line.start_with?('v22')
+                  if line =~ /v22=\w+day$/
+                    open(filename, 'a') { |f| f.puts 'v22=validated within ruby script' }
+                  else
+                    open(filename, 'a') { |f| f.puts "v22=ERROR VALIDATE MANUALLY #{Time.now}" }
+                  end
+                when line.start_with?('https://smetrics')
+                    open(filename, 'a') { |f| f.puts line[0...-15] }
+                else
+                  open(filename, 'a') { |f| f.puts line }
+                end
+              end
             end
           end
         end
       end
-      puts '  Already collected the dtm calls'
     end
+      puts '  Already collected the dtm calls'
   end
-
-  # def screenshot_collect
-  #   filename = "#{@report_path}screenshots/#{@uri}_ss.png"
-  #   if !(File.exist?(filename))
-  #     puts '  Collecting SCREENSHOT'
-  #     @browser.execute_script("$( '#global-debug-info-toggle' ).remove();")
-  #     @browser.execute_script("$( '#global-debug-info-bar' ).remove();")
-  #     sleep 1
-  #     #take screenshot
-  #     screenshot = filename
-  #     @browser.screenshot.save screenshot
-  #   else
-  #     puts '  Already taken Screenshot'
-  #   end
-  # end
  #
+#last
 end
   

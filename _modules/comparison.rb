@@ -18,11 +18,9 @@ module Comparison
     #this is where we need to figure out the comparison directory   second = freq.max_by(2) { |v,l| freq[v] }
     @second_most_recent_path = Dir.glob("../ruby_reports/#{@my_domain}/*/").max_by(@num) {|f| File.mtime(f)}.last
     if @my_driver == "mw"
-    puts @file1 = "#{@second_most_recent_path}#{@env}/#{@scene}_#{@my_driver}/#{@test_type}/#{@uri}_.#{@ext}"
-#      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}_#{@my_driver}/"
+      @file1 = "#{@second_most_recent_path}#{@env}/#{@scene}_#{@my_driver}/#{@test_type}/#{@uri}_.#{@ext}"
     else
-    puts @file1 = "#{@second_most_recent_path}#{@env}/#{@scene}/#{@test_type}/#{@uri}_.#{@ext}"
-#      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}/"
+      @file1 = "#{@second_most_recent_path}#{@env}/#{@scene}/#{@test_type}/#{@uri}_.#{@ext}"
     end
   end
   
@@ -30,13 +28,9 @@ module Comparison
     #this is where we need to figure out the most recently updated directory  
     @most_recent_path = Dir.glob("../ruby_reports/#{@my_domain}/*/").max_by {|f| File.mtime(f)}
     if @my_driver == "mw"
-    puts @file2 = "#{@most_recent_path}#{@env}/#{@scene}_#{@my_driver}/#{@test_type}/#{@uri}_.#{@ext}"
-#    puts @file1 = "#{@second_most_recent_path}#{@env}/#{@scene}/#{@test_type}_#{@my_driver}/#{@uri}_.#{@ext}"
-#      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}_#{@my_driver}/"
+    @file2 = "#{@most_recent_path}#{@env}/#{@scene}_#{@my_driver}/#{@test_type}/#{@uri}_.#{@ext}"
     else
-    puts @file2 = "#{@most_recent_path}#{@env}/#{@scene}/#{@test_type}/#{@uri}_.#{@ext}"
-#    puts @file1 = "#{@second_most_recent_path}#{@env}/#{@scene}/#{@test_type}/#{@uri}_.#{@ext}"
-#      report_path = "../ruby_reports/#{@my_domain}/#{@my_date}/#{@env}/#{@scene}/"
+    @file2 = "#{@most_recent_path}#{@env}/#{@scene}/#{@test_type}/#{@uri}_.#{@ext}"
     end
  end
   
@@ -59,7 +53,8 @@ module Comparison
       open("#{my_report_name}#{@uri}_.html", 'w') { |f| f.puts "<style>#{Diffy::CSS}</style>" }
       open("#{my_report_name}#{@uri}_.html", 'a') { |f| f.puts "#{@second_most_recent_path}\n" }  
       open("#{my_report_name}#{@uri}_.html", 'a') { |f| f.puts "#{@most_recent_path}\n" }  
-      open("#{my_report_name}#{@uri}_.html", 'a') { |f| f.puts difference }  
+      open("#{my_report_name}#{@uri}_.html", 'a') { |f| f.puts difference }
+      puts "#{my_report_name}#{@uri}_.html"
     end
   end
  #
