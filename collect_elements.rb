@@ -9,6 +9,7 @@ require 'selenium-webdriver'
 require 'watir-webdriver'
 require 'watir-webdriver-performance'
 require 'nokogiri'
+require 'watir-nokogiri'
 require 'highline/import'
 require 'webdriver-user-agent'
 require 'hashdiff'
@@ -28,6 +29,7 @@ run do
   puts "Loading #{@url_count} #{@key_url} urls"
   folder_setup # collect.rb
   @yml_urls.each do |uri|
+    begin
     @uri = uri
     if_logged_in # setup.rb
     goto_page_under_test # setup.rb
@@ -36,14 +38,18 @@ run do
 ####################################################
     puts "#{@url_count} #{@browser.url}"
     url_2_path
-    @browser.refresh
-    sleep 2
-    dom_collect if @dom == true
-    id_collect_from_html(@dom_filename) if @ids == true
-    class_collect_from_html(@dom_filename) if @class == true
-    analytics_collect if @analytics == true
+    # @browser.refresh
+    # sleep 2
     dtm_collect if @dtm == true
+    dom_collect if @dom == true
+    element_collect_from_html if @elements == true
+    analytics_collect if @analytics == true
     seo_collect(@dom_filename) if @seo == true
+    # id_collect_from_html(@dom_filename) if @ids == true
+    # class_collect_from_html(@dom_filename) if @class == true
+    rescue
+      next
+    end
   end
  #
 end # end run

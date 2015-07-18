@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (4.2.1)
+    activesupport (4.2.3)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
@@ -17,7 +17,7 @@ GEM
     facets (3.0.0)
     faker (1.4.3)
       i18n (~> 0.5)
-    ffi (1.9.8)
+    ffi (1.9.10)
     gmail (0.5.0)
       gmail_xoauth (>= 0.3.0)
       mail (>= 2.2.1)
@@ -28,13 +28,13 @@ GEM
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
-    json (1.8.2)
+    json (1.8.3)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     mime-types (2.6.1)
     mini_portile (0.6.2)
     minitest (5.7.0)
-    multi_json (1.11.0)
+    multi_json (1.11.1)
     net-ssh (2.9.2)
     netrc (0.10.3)
     nokogiri (1.6.6.2)
@@ -44,6 +44,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
+    rmagick (2.15.2)
     rubyzip (1.1.7)
     selenium-webdriver (2.45.0)
       childprocess (~> 0.5)
@@ -59,6 +60,8 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.1)
+    watir-nokogiri (1.0.0)
+      nokogiri
     watir-webdriver (0.7.0)
       selenium-webdriver (>= 2.45)
     watir-webdriver-performance (0.2.4)
@@ -83,8 +86,10 @@ DEPENDENCIES
   net-ssh (~> 2.9.2)
   nokogiri (~> 1.6.6.2)
   rest-client (~> 1.8.0)
+  rmagick
   selenium-webdriver (~> 2.45.0)
   time_diff (~> 0.3.0)
+  watir-nokogiri (~> 1.0.0)
   watir-webdriver (~> 0.7.0)
   watir-webdriver-performance (~> 0.2.4)
   webdriver-user-agent (~> 7.2)

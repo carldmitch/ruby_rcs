@@ -18,8 +18,10 @@ module Comparison
     #this is where we need to figure out the comparison directory   second = freq.max_by(2) { |v,l| freq[v] }
     @second_most_recent_path = Dir.glob("../ruby_reports/#{@my_domain}/*/").max_by(@num) {|f| File.mtime(f)}.last
     if @my_driver == "mw"
+      # @file1 = "#{@second_most_recent_path}stage/#{@scene}_#{@my_driver}/#{@test_type}/#{@uri}_.#{@ext}"
       @file1 = "#{@second_most_recent_path}#{@env}/#{@scene}_#{@my_driver}/#{@test_type}/#{@uri}_.#{@ext}"
     else
+      # @file1 = "#{@second_most_recent_path}stage/#{@scene}/#{@test_type}/#{@uri}_.#{@ext}"
       @file1 = "#{@second_most_recent_path}#{@env}/#{@scene}/#{@test_type}/#{@uri}_.#{@ext}"
     end
   end
@@ -28,11 +30,13 @@ module Comparison
     #this is where we need to figure out the most recently updated directory  
     @most_recent_path = Dir.glob("../ruby_reports/#{@my_domain}/*/").max_by {|f| File.mtime(f)}
     if @my_driver == "mw"
+    # @file2 = "#{@most_recent_path}kms/#{@scene}_#{@my_driver}/#{@test_type}/#{@uri}_.#{@ext}"
     @file2 = "#{@most_recent_path}#{@env}/#{@scene}_#{@my_driver}/#{@test_type}/#{@uri}_.#{@ext}"
     else
+    # @file2 = "#{@most_recent_path}kms/#{@scene}/#{@test_type}/#{@uri}_.#{@ext}"
     @file2 = "#{@most_recent_path}#{@env}/#{@scene}/#{@test_type}/#{@uri}_.#{@ext}"
     end
- end
+  end
   
   def file_compare(file1,file2)
     if ARGV.include? "test"

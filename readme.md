@@ -8,20 +8,30 @@ profile (logged in user only urls)
 # Collection Scripts
 
     $ ruby collect_elements.rb all stage
-    $ ruby collect_elements.rb all stage ray
-    $ ruby collect_elements.rb all stage ray profileuri
+    #=> public
+    $ ruby collect_elements.rb all ray stage
+    #=> private
+    $ ruby collect_elements.rb all ray profileuri stage
+    #=> profile
+
+    $ ruby collect_elements.rb all stage mw
+    #=> public_mw
+    $ ruby collect_elements.rb all stage ray mw
+    #=> private_mw
+    $ ruby collect_elements.rb all stage ray profileuri mw
+    #=> profile_mw
+    
+    $ ruby collect_elements.rb all stage mw test
     
 # Comparison
 
-    $ ruby compare_elements.rb all 2 stage ids
-    $ ruby compare_elements.rb all 2 stage class
+    $ ruby compare_elements.rb all 2 stage elements
     $ ruby compare_elements.rb all 2 stage analytics
-    $ ruby compare_elements.rb all 2 stage dom
+    $ ruby compare_elements.rb all 2 stage dtm
 
-    $ ruby compare_elements.rb 4 all stage ray ids
-    $ ruby compare_elements.rb 4 all stage ray class
+    $ ruby compare_elements.rb 4 all stage ray elements
     $ ruby compare_elements.rb 4 all stage ray analytics
-    $ ruby compare_elements.rb 4 all stage ray dom
+    $ ruby compare_elements.rb 4 all stage ray dtm
     
 # Rake
 ## collect
@@ -35,4 +45,16 @@ profile (logged in user only urls)
 ## compare
  
     $ rake compare_all num=2 env=stage
+    $ rake compare_all num=2 env=stage driver=mw
     $ rake compare_all num=4 env=stage
+    
+## clean up empty files
+
+    #=> execute from env directory (eg. 'stage')
+    $ find . -type f -size -160c
+    #=> returns small files that might need re-run
+    $ find . -type f -size -160c | grep dtm
+    #=> returns only dtm small files that might need re-run
+    $ find . -type f -size -160c -delete
+    #=> deletes small files so they can be re-run
+    

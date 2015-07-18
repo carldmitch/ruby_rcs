@@ -2,7 +2,7 @@ module Global
   def global_argv
     @sc_env_ray = ["al", "al2", "cm", "cm2", "dw", "dw2", "jd", "jd2","kms", "kms2","sg","tri","mservices", "preview", "stage", "prod"]
     @loaded_user = ["abell", "admin", "boyd", "bcrowder", "carl", "cdm001", "cmitchell", "expert", "jeff", "jwinger", "palanis", "ray", "rgivens"]
-    @test_to_run = ["dom", "ids", "class", "analytics"]
+    @test_to_run = ["analytics", "dom", "dtm", "elements"]
   end
   
 # <------------------------------------------------------------> #
@@ -285,6 +285,17 @@ module Global
       @scene = "public"
     end
   end
+
+# <------------------------------------------------------------> #
+
+def wait_for_ajax(timeout = 10)
+  timeout.times do
+    return true if browser.execute_script('return jQuery.active').to_i == 0
+    sleep(1)
+  end
+
+  raise Watir::Wait::TimeoutError, "Timeout of #{timeout} seconds exceeded on waiting for Ajax."
+end
 
 # <------------------------------------------------------------> #
 

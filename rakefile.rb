@@ -1,5 +1,14 @@
-# rake all env=stage 
-#
+# rake stage
+desc "stage"
+task :stage do
+  ruby "collect_elements.rb all stage" rescue puts($!, $@)
+  ruby "collect_elements.rb all ray stage" rescue puts($!, $@)
+  ruby "collect_elements.rb all ray profileuri stage" rescue puts($!, $@)
+  ruby "collect_elements.rb all stage mw" rescue puts($!, $@)
+  ruby "collect_elements.rb all stage ray mw" rescue puts($!, $@)
+  ruby "collect_elements.rb all stage ray profileuri mw" rescue puts($!, $@)
+end
+
 # rake collect env=stage browser=chrome scene=enhanced-profile
 desc "env= This will run the collection script against the 'public' urls"
 task :collect do
@@ -43,35 +52,21 @@ task :compare do
   ruby "compare_elements.rb all #{ENV['num']} #{ENV['env']} #{ENV['test']} #{ENV['user']} #{ENV['scene']} #{ENV['driver']}" rescue puts($!, $@) 
 end
 #
-#rake compare_all num=2 env=stage
-#rake compare_all num=2 env=stage driver=mw
-#rake compare_all num=4 env=stage
+# rake compare_all num=2 env=stage
+# rake compare_all num=2 env=stage driver=mw
+#
 desc "rake compare_all num=2 env=stage"
 task :compare_all do
-  ruby "compare_elements.rb all ids #{ENV['num']} #{ENV['env']} #{ENV['driver']}" rescue puts($!, $@) 
-  ruby "compare_elements.rb all class #{ENV['num']} #{ENV['env']} #{ENV['driver']}" rescue puts($!, $@) 
-  ruby "compare_elements.rb all analytics #{ENV['num']} #{ENV['env']} #{ENV['driver']}" rescue puts($!, $@) 
-#  ruby "compare_elements.rb all dom #{ENV['num']} #{ENV['env']}" rescue puts($!, $@) 
-  ruby "compare_elements.rb all ids ray #{ENV['num']} #{ENV['env']} #{ENV['driver']}" rescue puts($!, $@) 
-  ruby "compare_elements.rb all class ray #{ENV['num']} #{ENV['env']} #{ENV['driver']}" rescue puts($!, $@) 
-  ruby "compare_elements.rb all analytics ray #{ENV['num']} #{ENV['env']} #{ENV['driver']}" rescue puts($!, $@) 
-#  ruby "compare_elements.rb all dom ray #{ENV['num']} #{ENV['env']}" rescue puts($!, $@) 
-  ruby "compare_elements.rb all ids ray profileuri #{ENV['num']} #{ENV['env']} #{ENV['driver']}" rescue puts($!, $@) 
-  ruby "compare_elements.rb all class ray profileuri #{ENV['num']} #{ENV['env']} #{ENV['driver']}" rescue puts($!, $@) 
-  ruby "compare_elements.rb all analytics ray profileuri #{ENV['num']} #{ENV['env']} #{ENV['driver']}" rescue puts($!, $@) 
-#  ruby "compare_elements.rb all dom ray profileuri #{ENV['num']} #{ENV['env']}" rescue puts($!, $@) 
+#public
+    ruby "compare_elements.rb all elements #{ENV['num']} #{ENV['env']} #{ENV['driver']}" rescue puts($!, $@) 
+    ruby "compare_elements.rb all analytics #{ENV['num']} #{ENV['env']} #{ENV['driver']}" rescue puts($!, $@) 
+    ruby "compare_elements.rb all dtm #{ENV['num']} #{ENV['env']}" rescue puts($!, $@)
+#private
+    ruby "compare_elements.rb all elements ray #{ENV['num']} #{ENV['env']} #{ENV['driver']}" rescue puts($!, $@) 
+    ruby "compare_elements.rb all analytics ray #{ENV['num']} #{ENV['env']} #{ENV['driver']}" rescue puts($!, $@) 
+    ruby "compare_elements.rb all dtm ray #{ENV['num']} #{ENV['env']}" rescue puts($!, $@)
+#profile
+    ruby "compare_elements.rb all elements ray profileuri #{ENV['num']} #{ENV['env']} #{ENV['driver']}" rescue puts($!, $@) 
+    ruby "compare_elements.rb all analytics ray profileuri #{ENV['num']} #{ENV['env']} #{ENV['driver']}" rescue puts($!, $@) 
+    ruby "compare_elements.rb all dtm ray profileuri #{ENV['num']} #{ENV['env']}" rescue puts($!, $@) 
 end
-#
-## rake single env=stage 
-##
-#desc "This will run the 3 main scenes one at a time"
-#task :collect_one_by_one do
-#  ruby "compare_elements.rb all #{ENV['env']}" rescue puts($!, $@) 
-#  ruby "compare_elements.rb all ray #{ENV['env']}" rescue puts($!, $@) 
-#  ruby "compare_elements.rb all ray profileuri #{ENV['env']}" rescue puts($!, $@) 
-#end
-
-#compare_elements.rb all stage analytics
-#compare_elements.rb all stage ids
-#compare_elements.rb all stage class
-#compare_elements.rb all stage dom

@@ -57,12 +57,11 @@ module Setup
 
   def collecting_tasks
     test_config
-    # load_test2 # this
     @my_driver == "mw" ? (load_mobile_browser) : (load_desktop) # global
   end
 
   def reporting_tasks
-    load_test # this
+    load_test_type # this
     key_urls # this
     yml_urls_empty # this   
   end
@@ -120,13 +119,21 @@ end
 
   def goto_page_under_test
     if @my_profile_uri == "y"
+     if @test_type == 'screenshot'
+      @browser.goto "#{@base_url}#{@my_profile_url}/#{@uri}#{@cust_params}"
+     else
       @browser.goto "#{@base_url}#{@my_profile_url}/#{@uri}"
+     end
       unless @browser_type == "phantomjs"
         load_secs = @browser.performance.summary[:response_time]/1000
         puts "Load Time: #{load_secs} seconds."
       end
     else
-      @browser.goto "#{@base_url}/#{@uri}"
+      if @test_type == 'screenshot'
+       @browser.goto "#{@base_url}#{@my_profile_url}/#{@uri}#{@cust_params}"
+      else
+       @browser.goto "#{@base_url}/#{@uri}"
+      end
       unless @browser_type == "phantomjs"
         load_secs = @browser.performance.summary[:response_time]/1000
         puts "Load Time: #{load_secs} seconds."
@@ -134,25 +141,18 @@ end
     end # get_comparison
   end
 
-  def load_test
+  def load_test_type
     if ARGV.any? { |x| @test_to_run.include?(x) }
-      @test_type = 'ids' if ARGV.include? 'ids'
-      @test_type = 'class' if ARGV.include? 'class'
+      # @test_type = 'ids' if ARGV.include? 'ids'
+      # @test_type = 'class' if ARGV.include? 'class'
       @test_type = 'analytics' if ARGV.include? 'analytics'
       @test_type = 'dom' if ARGV.include? 'dom'
+      @test_type = 'dtm' if ARGV.include? 'dtm'
+      @test_type = 'elements' if ARGV.include? 'elements'
     else
       @test_type = ''
     end
   end
-
-  # def load_test2
-  #   testing = YAML.load(File.read("./_config/config.yml"))
-  #   @ids = testing['ids']
-  #   @class = testing['class']
-  #   @analytics = testing['analytics']
-  #   @dom = testing['dom']
-  #   @seo = testing['seo']
-  # end
 
   def url_2_path
     @url_count -= 1
